@@ -1,0 +1,435 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r}
+library(mvoutlier)
+#library(Rfunspaceadventure)
+#suppressWarnings(library(tidyverse)) #data manipulation
+suppressWarnings(library(corrplot)) #correlation
+suppressWarnings(library(gridExtra)) #visualization
+suppressWarnings(library(GGally)) #plot
+suppressWarnings(library(dplyr)) # Data Manipulation
+suppressWarnings(library(naniar)) #missing data
+suppressWarnings(library(Amelia)) # Missing Data: Missings Map
+suppressWarnings(library(ggplot2)) # Visualization
+suppressWarnings(library(scales)) # Visualization
+suppressWarnings(library(caTools)) # Prediction: Splitting Data
+suppressWarnings(library(car)) # Prediction: Checking Multicollinearity
+library(VIM)
+```
+
+```{r}
+df <- read.csv("E:/QuickHeal/Data_for_ML_Problem-QH/Data_Science_Problem-externall.csv",stringsAsFactors = FALSE)
+#df <- read.csv("E:/QuickHeal/Data_for_ML_Problem-QH/Data_Science_Problem-externall.csv",header=T, na.strings=c("","NA"))
+```
+```{r}
+head(df)
+```
+
+```{r}
+summary(df)
+```
+
+```{r}
+str(df)
+colnames(df)
+```
+
+
+
+```{r}
+gg_miss_var(df)
+```
+```{r}
+missmap(df, main = "Network Data - Missing Data", col = c("Red", "Yellow"), legend=FALSE)
+```
+
+```{r}
+calcmed <- function(x) {
+   return(c(y = 8, label = round(median(x), 1)))
+   # modify 8 to suit your needs
+}
+
+fun_mean <- function(x){
+  return (round((data.frame(y=mean(x),label=mean(x,na.rm=T))),2))}
+
+#boxplot(wine_dataset[,c(2)], col="red")
+ggplot(data=df, aes(x=1, y=as.factor(country_name
+)) )+
+  geom_boxplot(fill="red")+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1)+
+  stat_summary(fun.data = calcmed, geom = "text") +
+  
+  stat_summary(fun.y = mean, geom="point",colour="darkred", size=5) +
+  stat_summary(fun.data = fun_mean, geom="text", vjust=-0.5) +
+  geom_hline(aes(yintercept=mean(country_name
+, na.rm=T)), colour = "white", linetype="dashed", size=2)
+```
+
+```{r}
+# Create a color vector
+color_vector <- c("CNC",
+"lkjlkjlkj",
+"p",
+"prod",
+"Struts",
+"UN",
+"WIN")
+
+
+# Convert the vector to factor
+factor_color <- factor(color_vector)
+factor_color
+str(factor_color)
+```
+
+```{r}
+aggr(df)
+```
+```{r}
+
+#colSums(is.na(df)|df=='')
+levels <- unique(df$dir)
+levels[length(levels) + 1] <- "None"
+df$dir <- factor(df$dir, levels = levels)
+df$dir[is.na(df$dir)] <- "None"
+head(df$dir)
+
+
+df$dir <- factor(df$dir, levels = rev(unique(df$dir)), ordered=TRUE)
+
+
+df$local_ip <- factor(df$local_ip, levels = rev(unique(df$local_ip)), ordered=TRUE)
+levels[length(levels) + 1] <- "None"
+df$dir[is.na(df$local_ip)] <- "None"
+df[is.na(df$local_ip) ]
+
+df[is.na(df$dir) ]
+
+```
+```{r}
+levels <- unique(df$local_ip)
+levels[length(levels) + 1] <- "None"
+df$local_ip <- factor(df$local_ip, levels = levels)
+df$local_ip[is.na(df$local_ip)] <- "None"
+head(df$local_ip)
+
+
+df$local_ip[is.na(df$local_ip)]
+
+levels <- unique(df$dir)
+levels[length(levels) + 1] <- "None"
+df$dir <- factor(df$dir, levels = levels)
+df$dir[is.na(df$dir)] <- "None"
+head(df$dir)
+
+df$dir[is.na(df$dir)] <- "None"
+
+levels <- unique(df$lp)
+levels[length(levels) + 1] <- "None"
+df$lp <- factor(df$lp, levels = levels)
+df$lp[is.na(df$lp)] <- "None"
+head(df$lp)
+
+
+
+levels <- unique(df$mod)
+levels[length(levels) + 1] <- "None"
+df$mod <- factor(df$mod, levels = levels)
+df$mod[is.na(df$mod)] <- "None"
+head(df$mod)
+
+levels <- unique(df$nm)
+levels[length(levels) + 1] <- "None"
+df$nm <- factor(df$nm, levels = levels)
+df$nm[is.na(df$nm)] <- "None"
+head(df$nm)
+
+levels <- unique(df$prod)
+levels[length(levels) + 1] <- "None"
+df$prod <- factor(df$prod, levels = levels)
+df$prod[is.na(df$prod)] <- "None"
+head(df$prod)
+
+levels <- unique(df$productId)
+levels[length(levels) + 1] <- "None"
+df$productId <- factor(df$productId, levels = levels)
+df$productId[is.na(df$productId)] <- "None"
+head(df$productId)
+
+levels <- unique(df$protocol)
+levels[length(levels) + 1] <- "None"
+df$protocol <- factor(df$protocol, levels = levels)
+df$protocol[is.na(df$protocol)] <- "None"
+head(df$protocol)
+
+levels <- unique(df$ref)
+levels[length(levels) + 1] <- "None"
+df$ref <- factor(df$ref, levels = levels)
+df$ref[is.na(df$ref)] <- "None"
+head(df$ref)
+
+levels <- unique(df$remote_ip)
+levels[length(levels) + 1] <- "None"
+df$remote_ip <- factor(df$remote_ip, levels = levels)
+df$remote_ip[is.na(df$remote_ip)] <- "None"
+head(df$remote_ip)
+
+levels <- unique(df$rp)
+levels[length(levels) + 1] <- "None"
+df$rp <- factor(df$rp, levels = levels)
+df$rp[is.na(df$rp)] <- "None"
+head(df$rp)
+
+levels <- unique(df$sigid)
+levels[length(levels) + 1] <- "None"
+df$sigid <- factor(df$sigid, levels = levels)
+df$sigid[is.na(df$sigid)] <- "None"
+head(df$sigid)
+
+df$sigid[is.na(df$sigid)]
+
+
+
+df$timestamp[is.na(df$timestamp)] <- "1800-03-01T14:34:51.000Z"
+head(df$timestamp)
+
+df$timestamp[is.na(df$timestamp)]
+class(df$timestamp)
+
+levels <- unique(df$X.1)
+levels[length(levels) + 1] <- "None"
+df$X.1 <- factor(df$X.1, levels = levels)
+df$X.1[is.na(df$X.1)] <- "None"
+head(df$X.1)
+df$X.1[is.na(df$X.1)] 
+
+class(df$X.1)
+```
+
+```{r}
+library(pvclust)
+set.seed(20)
+df$sigid[is.na(df$sigid)]
+df$rp[is.na(df$rp)]
+#clusters <- kmeans(na.omit(df[, c( "rp" , "sigid") ]), centers = 2)
+```
+```{r}
+calcmed <- function(x) {
+   return(c(y = 8, label = round(median(x), 1)))
+   # modify 8 to suit your needs
+}
+
+fun_mean <- function(x){
+  return (round((data.frame(y=mean(x),label=mean(x,na.rm=T))),2))}
+
+#boxplot(wine_dataset[,c(2)], col="red")
+ggplot(data=df, aes(x=1, y=as.factor(dir
+)) )+
+  geom_boxplot(fill="red")+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1)+
+  stat_summary(fun.data = calcmed, geom = "text") +
+  
+  stat_summary(fun.y = mean, geom="point",colour="darkred", size=5) +
+  stat_summary(fun.data = fun_mean, geom="text", vjust=-0.5) +
+  geom_hline(aes(yintercept=mean(dir
+, na.rm=T)), colour = "white", linetype="dashed", size=2)
+```
+
+```{r}
+calcmed <- function(x) {
+   return(c(y = 8, label = round(median(x), 1)))
+   # modify 8 to suit your needs
+}
+
+fun_mean <- function(x){
+  return (round((data.frame(y=mean(x),label=mean(x,na.rm=T))),2))}
+
+#boxplot(wine_dataset[,c(2)], col="red")
+ggplot(data=df, aes(x=1, y=as.numeric(local_ip
+)) )+
+  geom_boxplot(fill="red")+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1)+
+  stat_summary(fun.data = calcmed, geom = "text") +
+  
+  stat_summary(fun.y = mean, geom="point",colour="darkred", size=5) +
+  stat_summary(fun.data = fun_mean, geom="text", vjust=-0.5) +
+  geom_hline(aes(yintercept=mean(local_ip
+, na.rm=T)), colour = "white", linetype="dashed", size=2)
+```
+
+```{r}
+calcmed <- function(x) {
+   return(c(y = 8, label = round(median(x), 1)))
+   # modify 8 to suit your needs
+}
+
+fun_mean <- function(x){
+  return (round((data.frame(y=mean(x),label=mean(x,na.rm=T))),2))}
+
+#boxplot(wine_dataset[,c(2)], col="red")
+ggplot(data=df, aes(x=1, y=log(as.numeric(lp
+)) ))+
+  geom_boxplot(fill="red")+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1)+
+  stat_summary(fun.data = calcmed, geom = "text") +
+  
+  stat_summary(fun.y = mean, geom="point",colour="darkred", size=5) +
+  stat_summary(fun.data = fun_mean, geom="text", vjust=-0.5) +
+  geom_hline(aes(yintercept=mean(as.numeric(lp)
+, na.rm=T)), colour = "white", linetype="dashed", size=2)
+
+```
+```{r}
+calcmed <- function(x) {
+   return(c(y = 8, label = round(median(x), 1)))
+   # modify 8 to suit your needs
+}
+
+fun_mean <- function(x){
+  return (round((data.frame(y=mean(x),label=mean(x,na.rm=T))),2))}
+
+#boxplot(wine_dataset[,c(2)], col="red")
+ggplot(data=df, aes(x=1, y=as.factor(mod
+)) )+
+  geom_boxplot(fill="red")+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1)+
+  stat_summary(fun.data = calcmed, geom = "text") +
+  
+  stat_summary(fun.y = mean, geom="point",colour="darkred", size=5) +
+  stat_summary(fun.data = fun_mean, geom="text", vjust=-0.5) +
+  geom_hline(aes(yintercept=mean(mod
+, na.rm=T)), colour = "white", linetype="dashed", size=2)
+```
+```{r}
+calcmed <- function(x) {
+   return(c(y = 8, label = round(median(x), 1)))
+   # modify 8 to suit your needs
+}
+
+fun_mean <- function(x){
+  return (round((data.frame(y=mean(x),label=mean(x,na.rm=T))),2))}
+
+#boxplot(wine_dataset[,c(2)], col="red")
+ggplot(data=df, aes(x=1, y=as.factor(prod
+)) )+
+  geom_boxplot(fill="red")+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1)+
+  stat_summary(fun.data = calcmed, geom = "text") +
+  
+  stat_summary(fun.y = mean, geom="point",colour="darkred", size=5) +
+  stat_summary(fun.data = fun_mean, geom="text", vjust=-0.5) +
+  geom_hline(aes(yintercept=mean(prod
+, na.rm=T)), colour = "white", linetype="dashed", size=2)
+```
+```{r}
+calcmed <- function(x) {
+   return(c(y = 8, label = round(median(x), 1)))
+   # modify 8 to suit your needs
+}
+
+fun_mean <- function(x){
+  return (round((data.frame(y=mean(x),label=mean(x,na.rm=T))),2))}
+
+#boxplot(wine_dataset[,c(2)], col="red")
+ggplot(data=df, aes(x=1, y=log(as.numeric(rp)
+)) )+
+  geom_boxplot(fill="red")+
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1)+
+  stat_summary(fun.data = calcmed, geom = "text") +
+  
+  stat_summary(fun.y = mean, geom="point",colour="darkred", size=5) +
+  stat_summary(fun.data = fun_mean, geom="text", vjust=-0.5) +
+  geom_hline(aes(yintercept=mean(rp
+, na.rm=T)), colour = "white", linetype="dashed", size=2)
+
+a <- log(as.numeric(df$rp))
+table(df$rp, a)
+```
+```{r}
+ggplot(df, aes(log(as.numeric(rp))))+
+  geom_density(fill="black", alpha=0.5) +
+  geom_vline(aes(xintercept=median(log(as.numeric(rp)), na.rm=T)), colour='green', linetype='dashed', size=2) +
+  geom_vline(aes(xintercept=mean(log(as.numeric(rp)), na.rm=T)), colour='pink', linetype='dashed', size=2) +
+  ggtitle("Density distribution of rp") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+library("anomalize")
+```
+
+```{r}
+purrr_package = tidyverse_cran_downloads%>%   filter(package == "purrr")%>%   ungroup()
+
+purrr_anomaly  = purrr_package %>%
+  time_decompose(count)
+
+purrr_anomaly%>% glimpse()
+```
+```{r}
+library(anomalize) #tidy anomaly detectiom
+library(tidyverse) #tidyverse packages like dplyr, ggplot, tidyr
+library(coindeskr) #bitcoin price extraction from coindesk
+```
+```{r}
+btc <- get_historic_price(start = "2017-01-01")
+```
+
+```{r}
+head(btc)
+```
+
+```{r}
+btc_ts <- btc %>% rownames_to_column() %>% as.tibble() %>% 
+  mutate(date = as.Date(rowname)) %>% select(-one_of('rowname'))
+
+df_ts <- df %>% rownames_to_column() %>% as.tibble() %>% 
+  mutate(date = as.Date(timestamp)) %>% select(-one_of('rowname'))
+head(df_ts)
+
+```
+```{r}
+btc_ts %>% 
+  time_decompose(Price, method = "stl", frequency = "auto", trend = "auto") %>%
+  anomalize(remainder, method = "gesd", alpha = 0.05, max_anoms = 0.2) %>%
+  plot_anomaly_decomposition() 
+```
+```{r}
+
+#df_ts %>% 
+ # time_decompose(local_ip, method = "stl", frequency = "auto", trend = "auto") %>%
+  #anomalize(remainder, method = "gesd", alpha = 0.05, max_anoms = 0.2) %>%
+  #plot_anomaly_decomposition()
+
+```
+```{r}
+library(tidyverse)
+library(reshape2)
+library(lubridate)
+library(purrrlyr)
+library(ggrepel)
+# devtools::install_github("twitter/AnomalyDetection")
+#library(AnomalyDetection)
+# install.packages("IsolationForest", repos="http://R-Forge.R-project.org")
+#library(IsolationForest)
+
+```
+```{r}
+#df_tot <- df_ts %>%
+ #       group_by(date) %>%
+  #      summarise(local_ip = count(local_ip),
+   #               lp = count(lp),
+    #              nm = count(nm),
+     #             prod = count(prod),
+      #            productId = count(productId)
+         #remote_ip = count(remote_ip),
+                  #cust_id = count(cust_id)
+       #           ) %>%
+        #ungroup() 
+
+```
+
